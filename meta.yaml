@@ -1,0 +1,23 @@
+package:
+  name: covdock
+  version: 1.00
+
+source:
+  git_rev:
+  git_url:
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - autodock
+
+  run:
+    - python
+
+test:
+  imports:
+    -
+
+about:
+  home:

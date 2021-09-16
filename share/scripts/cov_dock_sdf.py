@@ -10,12 +10,14 @@ cd_base = os.environ["CONDA_PREFIX"]+"/share/covdock"
 parser = argparse.ArgumentParser()
 parser.add_argument("-i",type = str, help = "Input sdf", required = True)
 parser.add_argument("-r",type = str, help = "Receptor file", required = True)
+parser.add_argument("-s",type = str, help = "Receptor CYS specifer", required = True)
 parser.add_argument("-l",type = str, help = "Flex residues list file" ,required = True)
 parser.add_argument("-w",type = str, help = "Working dir", default = "default_covdock_results" )
 args = parser.parse_args()
 infile = args.i
 receptor = args.r
 flexlist = args.l
+specifer = args.s
 wd = args.w
 
 assert infile[-4:] == ".sdf"
@@ -51,7 +53,7 @@ if True:
         ofp.write("source ~/.bashrc\n")
         ofp.write("conda activate covdock\n")
         ofp.write( "export RECEPTOR='fixed0'\n")
-        ofp.write( "export CYSSPECIFER='A:CYS150'\n")
+        ofp.write( f"export CYSSPECIFER='{specifer}'\n")
         ofp.write( "export FLEXINDEXFILE='flex.list'\n")
         ofp.write(f"export LIGAND='{name}'\n")
         ofp.write(f"export LIGANDINDICES='{h_index},{s_index}'\n")

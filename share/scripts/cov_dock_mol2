@@ -8,18 +8,20 @@ cd_base = os.environ["CONDA_PREFIX"]+"/share/covdock"
 
 # parse input 
 parser = argparse.ArgumentParser()
-parser.add_argument("-i",type = str, help = "Input sdf", required = True)
+parser.add_argument("-i",type = str, help = "Input mol2", required = True)
 parser.add_argument("-r",type = str, help = "Receptor file", required = True)
+parser.add_argument("-s",type = str, help = "Receptor CYS specifer", required = True)
 parser.add_argument("-l",type = str, help = "Flex residues list file" ,required = True)
 parser.add_argument("-w",type = str, help = "Working dir", default = "default_covdock_results" )
 args = parser.parse_args()
 infile = args.i
 receptor = args.r
 flexlist = args.l
+specifer = args.s
 wd = args.w
 
-assert infile[-4:] == ".sdf"
-name = infile[:-4]
+assert infile[-5:] == ".mol2"
+name = infile[:-5]
 
 # cp files
 os.system(f"mkdir {wd}")
@@ -30,28 +32,18 @@ os.chdir(f"{wd}")
 
 if True:
     # make mol2
-    os.system( f"{obabelbin} -isdf {name}.sdf -omol2 -O tmp.mol2" )
-    os.system(f"cat tmp.mol2 |sed 's/XX/S/' |sed 's/Du/SH/' > {name}.mol2")
-    with open("chimera.com",'w') as ofp:
-        ofp.write(f"open {name}.mol2 \n")
-        ofp.write("sel @/serialNumber=1 \n")
-        ofp.write("addh spec sel\n")
-        ofp.write("write format mol2 #0 tmp2.mol2\n")
-        ofp.write("stop\n")
-    os.system(f"{chimerabin} --nogui chimera.com")
-    for line in open("tmp2.mol2"):
+    for line in open( infile ):
         if "HS" in line:
             h_index = int( line.split()[0] ) 
-            s_index = 1
-    # Done.  S serial number is 1. HS atom name is HS 
-    os.system(f"mv tmp2.mol2 {name}.mol2")
+        if "SH" in line:
+            s_index = int( line.split()[0] ) 
 
     # make sh
     with open("run.sh","w") as ofp:
         ofp.write("source ~/.bashrc\n")
         ofp.write("conda activate covdock\n")
         ofp.write( "export RECEPTOR='fixed0'\n")
-        ofp.write( "export CYSSPECIFER='A:CYS150'\n")
+        ofp.write( f"export CYSSPECIFER='{specifer}'\n")
         ofp.write( "export FLEXINDEXFILE='flex.list'\n")
         ofp.write(f"export LIGAND='{name}'\n")
         ofp.write(f"export LIGANDINDICES='{h_index},{s_index}'\n")

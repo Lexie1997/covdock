@@ -9,7 +9,7 @@ cd_base = os.environ["CONDA_PREFIX"] + "/share/covdock"
 
 predefinedbondlength = {"S": 2.0, "C": 1.77}
 SH_LENGTH = 1.34
-angle = 109.5 * math.pi / 180.0
+angle = 108.5 * math.pi / 180.0
 
 # parse input
 parser = argparse.ArgumentParser()
@@ -24,7 +24,7 @@ args = parser.parse_args()
 infile = args.i
 receptor = args.r
 assert receptor[-4:] == ".pdb"
-receptorname = receptor[:-4]
+receptorname = os.path.basename(receptor)[:-4]
 flexlist = args.l
 specifer = args.s
 wd = args.w

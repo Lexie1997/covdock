@@ -9,7 +9,7 @@ cd_base = os.environ["CONDA_PREFIX"] + "/share/covdock"
 
 predefinedbondlength = {"S": 2.0, "C": 1.77}
 SH_LENGTH = 1.34
-angle = 109.5 * math.pi / 180.0
+angle = 108.5 * math.pi / 180.0
 
 # parse input
 parser = argparse.ArgumentParser()
@@ -24,7 +24,7 @@ args = parser.parse_args()
 infile = args.i
 receptor = args.r
 assert receptor[-4:] == ".pdb"
-receptorname = receptor[:-4]
+receptorname = os.path.basename(receptor)[:-4]
 flexlist = args.l
 specifer = args.s
 wd = args.w
@@ -232,6 +232,8 @@ if True:
         f"rm chimera.com empty {name}.mol2 {receptorname}_flex.pdbqt {receptorname}.glg {receptorname}.gpf {receptorname}.pdbqt {receptorname}_rigid.maps.fld {receptorname}_rigid.maps.xyz {receptorname}_rigid.pdbqt flex.fp ligcovalent_{receptorname}.dlg ligcovalent_{receptorname}.dpf ligcovalent_flex.pdbqt ligcovalent.pdbqt ligcovalent_rigid.pdbqt ligcovalent_single.pdb tmp.mol2"
     )
     os.system("rm residues.log ")
+    os.system(f"rm {receptorname}.pdb run.sh flex.list ligcovalent.pdb *.sdf")
+
 
     # grep log
     os.system(

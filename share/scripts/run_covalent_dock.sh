@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-export CD_BASE="$CONDA_PREFIX/share/covalent_dock"
+export CD_BASE="$CONDA_PREFIX/share/covdock"
 
 # RECEPTOR='fixed0'
 # CYSSPECIFER='A:CYS150'
